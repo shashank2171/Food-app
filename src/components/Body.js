@@ -20,11 +20,17 @@ const Body = () => {
 
   async function getRestaurants(){
     const data = await fetch("https://www.swiggy.com/dapi/restaurants/list/v5?lat=27.49870&lng=77.66690&is-seo-homepage-enabled=true&page_type=DESKTOP_WEB_LISTING")
+    .then(data => data.json())
+    .then( json => {
+      console.log(json);
+      setRestaurants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    })
+    
 
-    const json = await data.json();
-    console.log(json);
-    setRestaurants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
-    console.log(restaurants);
+    // const json = await data.json();
+    // console.log(json);
+    // setRestaurants(json?.data?.cards[4]?.card?.card?.gridElements?.infoWithStyle?.restaurants);
+    // console.log(restaurants);
   }
   
   return (
@@ -53,8 +59,11 @@ const Body = () => {
     </div>
     <div className='restuarant-list'>
       {restaurants.map((restaurant)=>{
+        console.log(restaurant.info)
+        let res = restaurant.info
         return (
-          <Card data = {restaurant} key={restaurant.info.id} />
+          <Card data = {res} key={res.id} cloudinaryImageId={res.cloudinaryImageId} name={res.name}
+            area={res.locality} costForTwoString={res.costForTwo} />
         );
       })
       }
